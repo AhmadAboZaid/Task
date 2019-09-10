@@ -19,6 +19,18 @@
 		{{Session::get('article_updated')}}
 </div>
 @endif
+
+@if(Session::has('uploaded_success'))
+<div class="alert alert-success">
+        {{Session::get('uploaded_success')}}
+</div>
+@endif
+
+@if(Session::has('uploaded_not_success'))
+<div class="alert alert-warning">
+        {{Session::get('uploaded_not_success')}}
+</div>
+@endif
               <div class="row clearfix">
                 <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
                     <div class="card">
@@ -67,6 +79,39 @@
                           <center>  <button type="submit" class="btn btn-success btn-lg waves-effect">
                                     <i class="material-icons">edit</i>
                                     <span>Update Article</span>
+                                </button>
+                                </center>
+                                  </form>      
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row clearfix">
+                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                    <div class="card">
+                     <div class="body">
+            <form method="post" action="/articleImages" enctype="multipart/form-data">
+                        @csrf
+                        <input type="hidden" name="article_id" value="{{$article->id}}">
+                            <div class="row clearfix">
+                                <div class="col-md-4">
+                                <label>Article Images</label>
+                                    <div class="input-group input-group-lg">
+                                        <span class="input-group-addon">
+                                            <i class="material-icons">title</i>
+                                        </span>
+                                        <div class="form-line">
+                            <input type="file" class="form-control" name="images[]" multiple>
+                                        </div>
+                                    </div>
+                                </div>
+                               
+                               
+                            </div>
+                          <center>  <button type="submit" class="btn btn-success btn-lg waves-effect">
+                                    <i class="material-icons">add</i>
+                                    <span>Add Images</span>
                                 </button>
                                 </center>
                                   </form>      

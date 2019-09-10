@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Article;
 use App\Http\Requests\ArticleRequest;
 use Session;
+use App\ArticleImages;
 class ArticleController extends Controller
 {
     /**
@@ -165,5 +166,69 @@ class ArticleController extends Controller
             return back();
         }
         abort(404);
+    }
+
+    public function addArticleImages(Request $request)
+    {   
+        // check validation
+        $this->validate($request,[
+
+            'images' => 'required'
+        ]);
+        // check articel exist
+        $article = Article::find($request->article_id);
+        if($article){
+            // check request has files
+            if($request->hasFile('images')){
+                // allowed extensions
+        $extensions= ['jpg','png','jpeg'];
+
+        $files = $request->file('images');
+        $allFilesValid = true; // to check if has file not allowed extention
+                foreach($files as $file){
+
+            $fileName = $file->getClientOriginalName();
+                
+            $fileExtension = $file->getClientOriginalExtension();
+                
+            //check valid extention
+            $checkValidExtention =in_array($fileExtension,$extensions); 
+
+
+                if($checkValidExtention){
+                    // store image
+            $file->storeAs('public/article_images',$fileName);
+                
+                //store in database 
+                $articleImage = new ArticleImages;
+                $articleImage->article_id = $request->article_id;
+                $articleImage->image = 'public/article_images/'.$fileName;
+                $articleImage->save();
+                
+            }
+
+                else{
+                    // not valid extention
+                    $allFilesValid = false;
+                    continue;  
+                }
+            }
+
+
+            // return message if all files has valid or not
+            if($allFilesValid)
+             {
+                Session::flash('uploaded_success','Uploaded images Successfully');
+             }  
+
+             else{
+                Session::flash('uploaded_not_success','Some images uploaded and some images failed');
+
+             } 
+
+             return back();
+                
+            }
+        }
     }
 }

@@ -16,3 +16,4 @@ Route::get('/', function () {
 });
 
 Route::resource('/articles','ArticleController'); // resource controller
+Route::post('/articleImages','ArticleController@addArticleImages');
